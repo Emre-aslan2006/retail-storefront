@@ -155,6 +155,17 @@ export default function ProductDetail() {
                 >
                   {added ? '✓ Added' : 'Add to cart'}
                 </button>
+                {/* Collect in store */}
+                <div className="mt-4 flex items-start gap-2 text-sm text-gray-500 border border-cream-200 rounded-lg px-4 py-3">
+                  <span className="text-base">🏪</span>
+                  <div>
+                    <span className="font-medium text-gray-700">Collect in store</span>
+                    <span className="mx-1">·</span>
+                    123 High Street, London
+                    <br />
+                    <span className="text-xs text-gray-400">Ready within 1–2 hours after ordering</span>
+                  </div>
+                </div>
               </div>
             )}
           </div>
