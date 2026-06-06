@@ -61,9 +61,9 @@ export default function Cart() {
     setPlaceError(null)
     try {
       const { data, error } = await supabase.rpc('place_order', {
-        p_customer_name: form.name.trim(),
-        p_customer_email: form.email.trim(),
-        p_customer_phone: form.phone.trim() || null,
+        p_name: form.name.trim(),
+        p_email: form.email.trim(),
+        p_phone: form.phone.trim() || null,
         p_note: form.note.trim() || null,
         p_items: items.map(i => ({ product_id: i.id, quantity: i.qty })),
       })
