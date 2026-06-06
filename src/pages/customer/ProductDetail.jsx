@@ -131,7 +131,7 @@ export default function ProductDetail() {
                       value={qty}
                       onChange={handleQtyInput}
                       onBlur={handleQtyInput}
-                      className="w-14 text-center border-x border-cream-200 py-2 focus:outline-none focus:bg-cream-50 text-sm"
+                      className="w-14 text-center py-2 focus:outline-none focus:bg-cream-50 text-sm [appearance:textfield]"
                     />
                     <button
                       onClick={() => changeQty(1)}
