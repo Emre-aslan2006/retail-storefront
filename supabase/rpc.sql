@@ -10,7 +10,7 @@
 -- This is the "two people bought the last one" race-condition guard.
 -- ============================================================
 create or replace function place_order(
-  p_items  jsonb,        -- [{ product_id, product_name, unit_price_pence, quantity }]
+  p_items  jsonb,        -- [{ product_id, quantity }]
   p_name   text,
   p_email  text,
   p_phone  text default null,
@@ -35,11 +35,11 @@ begin
   loop
     v_product_id := (v_item->>'product_id')::uuid;
     v_quantity   := (v_item->>'quantity')::integer;
-    v_price      := (v_item->>'unit_price_pence')::integer;
-    v_name       := v_item->>'product_name';
+    
+    
 
     -- Lock the product row to prevent concurrent sales
-    select stock into v_stock
+    select stock, price_pence, name into v_stock, v_price, v_name
     from products
     where id = v_product_id
     for update;
@@ -73,8 +73,8 @@ begin
     values (
       v_order_id,
       (v_item->>'product_id')::uuid,
-      v_item->>'product_name',
-      (v_item->>'unit_price_pence')::integer,
+      (select name from products where id = (v_item->>'product_id')::uuid),
+      (select price_pence from products where id = (v_item->>'product_id')::uuid),
       (v_item->>'quantity')::integer
     );
   end loop;
