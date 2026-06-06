@@ -6,6 +6,8 @@ import Header from '../../components/Header'
 import ProductCard from '../../components/ProductCard'
 import { SkeletonGrid } from '../../components/SkeletonCard'
 
+const categories = ['All', 'Tops', 'Bottoms', 'Dresses', 'Outerwear', 'Footwear', 'Accessories']
+
 export default function Home() {
   const [products, setProducts] = useState([])
   const [status, setStatus] = useState('loading') // loading | success | error
@@ -28,26 +30,24 @@ export default function Home() {
 
   useEffect(() => { fetchProducts() }, [fetchProducts])
 
-  const categories = useMemo(() => {
-    const cats = [...new Set(products.map(p => p.category).filter(Boolean))]
-    return ['All', ...cats.sort()]
-  }, [products])
-
-  const setQuery = useCallback(
-    debounce((val) => {
-      setSearchParams(prev => {
-        const next = new URLSearchParams(prev)
-        if (val) next.set('q', val); else next.delete('q')
-        return next
-      })
-    }, 300),
+  const setQuery = useMemo(
+    () =>
+      debounce((val) => {
+        setSearchParams(prev => {
+          const next = new URLSearchParams(prev)
+          if (val) next.set('q', val); else next.delete('q')
+          return next
+        })
+      }, 300),
     [setSearchParams]
   )
 
+  // Single-select: clicking the active category deselects back to All
   const setCat = (c) => {
     setSearchParams(prev => {
       const next = new URLSearchParams(prev)
-      if (c === 'All') next.delete('category'); else next.set('category', c)
+      if (c === 'All' || c === cat) next.delete('category')
+      else next.set('category', c)
       return next
     })
   }
@@ -70,11 +70,20 @@ export default function Home() {
       <Header />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero strip */}
-        <div className="mb-8 bg-cream-100 rounded-2xl p-6 sm:p-8">
-          <p className="font-display text-3xl sm:text-4xl font-bold text-gray-800 leading-tight">
-            Carefully chosen goods,<br className="hidden sm:block" /> made to last.
-          </p>
-          <p className="mt-2 text-gray-600">Browse our collection — everything is available to collect in store.</p>
+        <div className="mb-8 bg-cream-100 rounded-2xl overflow-hidden flex items-center justify-between">
+          <div className="p-6 sm:p-8 flex-1">
+            <p className="font-display text-3xl sm:text-4xl font-bold text-gray-800 leading-tight">
+              Carefully chosen goods,<br className="hidden sm:block" /> made to last.
+            </p>
+            <p className="mt-2 text-gray-600">Browse our collection — everything is available to collect in store.</p>
+          </div>
+          <div className="hidden md:block w-64 lg:w-80 h-48 lg:h-56 flex-shrink-0 overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=640&auto=format&fit=crop"
+              alt="Curated fashion collection"
+              className="w-full h-full object-cover"
+            />
+          </div>
         </div>
 
         {/* Toolbar */}
@@ -83,7 +92,7 @@ export default function Home() {
           <input
             id="search-input"
             type="search"
-            placeholder="Search products…"
+            placeholder="Search products..."
             defaultValue={q}
             onChange={e => setQuery(e.target.value)}
             className="flex-1 border border-cream-200 bg-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
@@ -93,6 +102,7 @@ export default function Home() {
               <button
                 key={c}
                 onClick={() => setCat(c)}
+                aria-pressed={cat === c}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   cat === c
                     ? 'bg-brand text-white'
@@ -122,26 +132,23 @@ export default function Home() {
 
         {status === 'success' && products.length === 0 && (
           <div className="text-center py-20">
-            <div className="text-5xl mb-4">🏪</div>
+            <div className="text-5xl mb-4">🛍</div>
             <p className="text-gray-600">Nothing in stock right now — check back soon!</p>
           </div>
         )}
 
         {status === 'success' && products.length > 0 && filtered.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-gray-600 mb-4">No results for "<strong>{q || cat}</strong>"</p>
-            <button
-              onClick={() => setSearchParams({})}
-              className="border border-brand text-brand px-5 py-2 rounded-lg hover:bg-brand hover:text-white transition-colors"
-            >
-              Clear filters
-            </button>
+            <div className="text-5xl mb-4">🔍</div>
+            <p className="text-gray-600">No products match your search.</p>
           </div>
         )}
 
         {status === 'success' && filtered.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {filtered.map(p => <ProductCard key={p.id} product={p} />)}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {filtered.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
         )}
       </main>
