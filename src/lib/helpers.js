@@ -18,6 +18,16 @@ export function priceToPence(displayPrice) {
 }
 
 /**
+ * Clamp a cart quantity between 1 and the available stock.
+ * Ensures we never send qty < 1 or qty > stock to the DB.
+ * clampQty(requested, stock) => integer in [1, max(1, stock)]
+ */
+export function clampQty(requested, stock) {
+  const max = Math.max(1, stock)
+  return Math.min(Math.max(1, requested), max)
+}
+
+/**
  * Relative time: "3 min ago", "2 hr ago", etc.
  */
 export function relativeTime(dateString) {
@@ -35,50 +45,29 @@ export function relativeTime(dateString) {
  * Truncate a UUID to a short order reference (first 8 chars, uppercase).
  */
 export function shortId(uuid) {
-  return uuid?.slice(0, 8).toUpperCase() ?? ''
+  return (uuid || '').slice(0, 8).toUpperCase()
 }
 
 /**
- * Debounce a function call.
+ * Status badge colours for order status strings.
  */
-export function debounce(fn, delay) {
-  let timer
-  return (...args) => {
-    clearTimeout(timer)
-    timer = setTimeout(() => fn(...args), delay)
+export function statusColour(status) {
+  switch (status) {
+    case 'pending':   return 'bg-amber-100 text-amber-800'
+    case 'ready':     return 'bg-green-100 text-green-800'
+    case 'collected': return 'bg-gray-100 text-gray-600'
+    case 'cancelled': return 'bg-red-100 text-red-700'
+    default:          return 'bg-gray-100 text-gray-600'
   }
 }
 
 /**
- * Compress and resize an image File to max 1200px, returns a new File.
+ * Debounce: returns a function that delays calling fn until after wait ms.
  */
-export async function compressImage(file, maxPx = 1200, quality = 0.85) {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    const url = URL.createObjectURL(file)
-    img.onload = () => {
-      let { width, height } = img
-      if (width > maxPx || height > maxPx) {
-        const ratio = Math.min(maxPx / width, maxPx / height)
-        width = Math.round(width * ratio)
-        height = Math.round(height * ratio)
-      }
-      const canvas = document.createElement('canvas')
-      canvas.width = width
-      canvas.height = height
-      const ctx = canvas.getContext('2d')
-      ctx.drawImage(img, 0, 0, width, height)
-      canvas.toBlob(
-        (blob) => {
-          URL.revokeObjectURL(url)
-          if (!blob) return reject(new Error('Canvas toBlob failed'))
-          resolve(new File([blob], file.name, { type: 'image/jpeg' }))
-        },
-        'image/jpeg',
-        quality
-      )
-    }
-    img.onerror = reject
-    img.src = url
-  })
+export function debounce(fn, wait = 300) {
+  let timer
+  return (...args) => {
+    clearTimeout(timer)
+    timer = setTimeout(() => fn(...args), wait)
+  }
 }
