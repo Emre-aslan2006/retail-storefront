@@ -98,7 +98,7 @@ export default function OrderConfirmation() {
         {/* Collection info */}
         <div className="bg-cream-100 rounded-xl p-4 mb-6 text-sm text-gray-700 space-y-1">
           <p className="font-semibold text-gray-800 mb-2">Collection details</p>
-          <p>📍 123 High Street, Your Town, AB1 2CD</p>
+          <p>📍 123 High Street, London</p>
           <p>🕐 Mon–Sat 9am–6pm, Sun 10am–4pm</p>
           <p>💳 Payment in store at time of collection</p>
         </div>
