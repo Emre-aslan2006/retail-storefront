@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { formatPrice } from '../../lib/helpers'
 import { useToast } from '../../contexts/ToastContext'
+import { DEMO_MODE } from '../../lib/constants'
 
 export default function Products() {
   const [products, setProducts] = useState([])
@@ -35,7 +36,8 @@ export default function Products() {
 
   const saveStock = async (id) => {
     const newStock = parseInt(stockDraft, 10)
-    if (isNaN(newStock) || newStock < 0) { setEditingStockId(null); return }
+ 
+    if (DEMO_MODE) { toast('🚫 Demo mode – changes are disabled in this portfolio preview.'); return }   if (isNaN(newStock) || newStock < 0) { setEditingStockId(null); return }
     setProducts(prev => prev.map(p => p.id === id ? { ...p, stock: newStock } : p))
     const { error } = await supabase.from('products').update({ stock: newStock }).eq('id', id)
     if (error) { toast('Failed to update stock'); fetchProducts() }
@@ -46,7 +48,8 @@ export default function Products() {
   const toggleActive = async (product) => {
     const newVal = !product.is_active
     const msg = newVal ? 'Product is now visible in the store.' : 'Product hidden from store.'
-    await supabase.from('products').update({ is_active: newVal }).eq('id', product.id)
+    await supabas
+    if (DEMO_MODE) { toast('🚫 Demo mode – changes are disabled in this portfolio preview.'); return }e.from('products').update({ is_active: newVal }).eq('id', product.id)
     toast(msg)
     setDeactivateId(null)
     fetchProducts()
