@@ -6,6 +6,7 @@ import { useCart } from '../../contexts/CartContext'
 import { useToast } from '../../contexts/ToastContext'
 import Header from '../../components/Header'
 import NotFound from '../NotFound'
+  import { SHOP_ADDRESS } from '../../lib/constants'
 
 export default function ProductDetail() {
   const { id } = useParams()
@@ -161,7 +162,7 @@ export default function ProductDetail() {
                   <div>
                     <span className="font-medium text-gray-700">Collect in store</span>
                     <span className="mx-1">·</span>
-                    123 High Street, London
+                    {SHOP_ADDRESS}
                     <br />
                     <span className="text-xs text-gray-400">Ready within 1–2 hours after ordering</span>
                   </div>
