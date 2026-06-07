@@ -11,3 +11,8 @@ export const SHOP_HOURS = 'Mon–Sat 9am–6pm, Sun 10am–4pm';
 
 /** Payment note shown on the order confirmation page. */
 export const SHOP_PAYMENT_NOTE = 'Payment in store at time of collection';
+
+/** Demo mode – set to true to disable all admin write operations.
+ *  This lets employers browse the admin UI safely without changing live data.
+ */
+export const DEMO_MODE = true;
