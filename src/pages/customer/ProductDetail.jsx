@@ -6,7 +6,7 @@ import { useCart } from '../../contexts/CartContext'
 import { useToast } from '../../contexts/ToastContext'
 import Header from '../../components/Header'
 import NotFound from '../NotFound'
-  import { SHOP_ADDRESS } from '../../lib/constants'
+import { SHOP_ADDRESS } from '../../lib/constants'
 
 export default function ProductDetail() {
   const { id } = useParams()
