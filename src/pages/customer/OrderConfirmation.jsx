@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { formatPrice, shortId } from '../../lib/helpers'
 import Header from '../../components/Header'
+import { SHOP_ADDRESS, SHOP_HOURS, SHOP_PAYMENT_NOTE } from '../../lib/constants'
 
 const STATUS_CONFIG = {
   pending: { label: 'Order received', color: 'bg-amber-100 text-amber-800', dot: 'bg-amber-500' },
@@ -98,9 +99,9 @@ export default function OrderConfirmation() {
         {/* Collection info */}
         <div className="bg-cream-100 rounded-xl p-4 mb-6 text-sm text-gray-700 space-y-1">
           <p className="font-semibold text-gray-800 mb-2">Collection details</p>
-          <p>📍 123 High Street, London</p>
-          <p>🕐 Mon–Sat 9am–6pm, Sun 10am–4pm</p>
-          <p>💳 Payment in store at time of collection</p>
+          <p>📍 {SHOP_ADDRESS}</p>
+          <p>🕐 {SHOP_HOURS}</p>
+          <p>💳 {SHOP_PAYMENT_NOTE}</p>
         </div>
 
         <p className="text-center text-sm text-gray-500 mb-6">
