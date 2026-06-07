@@ -48,8 +48,8 @@ export default function Products() {
   const toggleActive = async (product) => {
     const newVal = !product.is_active
     const msg = newVal ? 'Product is now visible in the store.' : 'Product hidden from store.'
-    await supabas
-    if (DEMO_MODE) { toast('🚫 Demo mode – changes are disabled in this portfolio preview.'); return }e.from('products').update({ is_active: newVal }).eq('id', product.id)
+    if (DEMO_MODE) { toast('🚫 Demo mode – changes are disabled in this portfolio preview.'); return }
+    await supabase.from('products').update({ is_active: newVal }).eq('id', product.id)
     toast(msg)
     setDeactivateId(null)
     fetchProducts()
