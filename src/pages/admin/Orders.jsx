@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
 import { formatPrice, relativeTime, shortId } from '../../lib/helpers'
 import { useToast } from '../../contexts/ToastContext'
+import { DEMO_MODE } from '../../lib/constants'
 
 const TABS = ['all', 'pending', 'ready', 'collected', 'cancelled']
 const PAGE_SIZE = 25
@@ -53,7 +54,8 @@ export default function Orders() {
   }, [tab, page]) // eslint-disable-line
 
   const updateStatus = async (orderId, newStatus) => {
-    const { error } = await supabase.from('orders').update({ status: newStatus }).eq('id', orderId)
+    const { error } = await supabase.from('orde
+    if (DEMO_MODE) { toast('🚫 Demo mode – changes are disabled in this portfolio preview.'); return }rs').update({ status: newStatus }).eq('id', orderId)
     if (error) { toast('Failed to update status'); return }
     toast(`Order marked as ${newStatus}`)
     fetchOrders()
@@ -61,8 +63,10 @@ export default function Orders() {
   }
 
   const cancelOrder = async (orderId) => {
+    if (DEMO_MODE) { toast('🚫 Demo mode – changes are disabled in this portfolio preview.'); return }
     const { error } = await supabase.rpc('cancel_order', { p_order_id: orderId })
-    if (error) { toast('Failed to cancel: ' + error.message); return }
+    if (error) { toast('Failed to cancel: ' + error.message); return
+    if (DEMO_MODE) { toast('🚫 Demo mode – changes are disabled in this portfolio preview.'); return } }
     toast('Order cancelled and stock restored')
     setCancelId(null)
     fetchOrders()
