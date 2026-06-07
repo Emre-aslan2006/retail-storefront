@@ -10,7 +10,6 @@ export default function Dashboard() {
   const [lowStock, setLowStock] = useState([])
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
-
   const fetchAll = async () => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
@@ -29,7 +28,7 @@ export default function Dashboard() {
     setStats({
       ordersToday: todayOrders.length,
       revenueToday: todayOrders.reduce((s, o) => s + (o.total_pence ?? 0), 0),
-      pendingCount: todayOrders.filter(o => o.status === 'pending').length,
+            pendingCount: (pendingRes.data ?? []).length,
     })
     setPending(pendingRes.data ?? [])
     setLowStock(lowStockRes.data ?? [])
