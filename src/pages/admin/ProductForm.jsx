@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { priceToPence, formatPrice, compressImage } from '../../lib/helpers'
 import { useToast } from '../../contexts/ToastContext'
+import { DEMO_MODE } from '../../lib/constants'
 
 const DEFAULT_CATEGORIES = ['Tops', 'Bottoms', 'Dresses', 'Accessories', 'Footwear', 'Outerwear']
 
@@ -98,6 +99,7 @@ export default function ProductForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (DEMO_MODE) { toast('🚫 Demo mode – changes are disabled in this portfolio preview.'); return }
     const errs = validate()
     setErrors(errs)
     if (Object.keys(errs).length > 0) return
