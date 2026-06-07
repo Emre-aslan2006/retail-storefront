@@ -54,8 +54,8 @@ export default function Orders() {
   }, [tab, page]) // eslint-disable-line
 
   const updateStatus = async (orderId, newStatus) => {
-    const { error } = await supabase.from('orde
-    if (DEMO_MODE) { toast('🚫 Demo mode – changes are disabled in this portfolio preview.'); return }rs').update({ status: newStatus }).eq('id', orderId)
+    if (DEMO_MODE) { toast('🚫 Demo mode – changes are disabled in this portfolio preview.'); return }
+    const { error } = await supabase.from('orders').update({ status: newStatus }).eq('id', orderId)
     if (error) { toast('Failed to update status'); return }
     toast(`Order marked as ${newStatus}`)
     fetchOrders()
